@@ -6,6 +6,7 @@ using Rocket.Unturned.Player;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Steamworks;
 using UnityEngine;
 using Logger = Rocket.Core.Logging.Logger;
 
@@ -32,7 +33,7 @@ namespace PhaserArray.TeamJoinerEnhanced
 		private void OnPlayerConnected(UnturnedPlayer player)
 		{
 			// The player is not in any of the Steam groups.
-			if (_config.Teams.All(team => player.SteamGroupID != team.SteamGroupId))
+			if (_config.Teams.All(team => (CSteamID)team.SteamGroupId != player.SteamGroupID))
 			{
 				Logger.Log($"{player.DisplayName} joined without being in any relevant Steam groups.");
 				UnturnedChat.Say(player, _config.NoTeamMessage, Color.yellow);
@@ -41,7 +42,7 @@ namespace PhaserArray.TeamJoinerEnhanced
 			}
 
 			var playerTeam =
-				_config.Teams.Find(team => team.SteamGroupId == player.SteamGroupID);
+				_config.Teams.Find(team => (CSteamID)team.SteamGroupId == player.SteamGroupID);
 			var playerPermissionsGroups = R.Permissions.GetGroups(player, true);
 
 			// The player only has the default permissions group, nothing to clear, just give them the appropriate permissions group.

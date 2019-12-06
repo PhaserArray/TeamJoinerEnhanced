@@ -1,6 +1,7 @@
 ﻿using Rocket.API;
 using Steamworks;
 using System.Collections.Generic;
+using System.Xml.Serialization;
 
 namespace PhaserArray.TeamJoinerEnhanced
 {
@@ -16,7 +17,9 @@ namespace PhaserArray.TeamJoinerEnhanced
 		public string PermissionsWipedMessage;
 		public string PermissionsFromOtherTeamWarning;
 
+		[XmlArrayItem(ElementName = "IgnoredPermissionsGroupId")]
 		public List<string> IgnoredPermissionsGroupIds;
+		[XmlArrayItem(ElementName = "Team")]
 		public List<TeamJoinerEnhancedConfigurationTeam> Teams;
 
 		public void LoadDefaults()
@@ -48,12 +51,12 @@ namespace PhaserArray.TeamJoinerEnhanced
 				new TeamJoinerEnhancedConfigurationTeam(
 					"allies",
 					"You have joined the allies and have been given the appropriate permissions group.",
-					(CSteamID) 103582791465718191u
+					103582791465718191u
 					),
 				new TeamJoinerEnhancedConfigurationTeam(
 					"axis",
 					"You have joined the axis and have been given the appropriate permissions group.",
-					(CSteamID) 103582791465717990u
+					103582791465717990u
 					)
 			};
 		}
@@ -62,9 +65,9 @@ namespace PhaserArray.TeamJoinerEnhanced
 		{
 			public string PermissionGroupId;
 			public string WelcomeMessage;
-			public CSteamID SteamGroupId;
+			public ulong SteamGroupId;
 
-			public TeamJoinerEnhancedConfigurationTeam(string permissionGroupId, string welcomeMessage, CSteamID steamGroupId)
+			public TeamJoinerEnhancedConfigurationTeam(string permissionGroupId, string welcomeMessage, ulong steamGroupId)
 			{
 				PermissionGroupId = permissionGroupId;
 				WelcomeMessage = welcomeMessage;
