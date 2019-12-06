@@ -36,7 +36,8 @@ namespace PhaserArray.TeamJoinerEnhanced
 				"mod",
 				"moderator",
 				"admin",
-				"administrator"
+				"administrator",
+				"default"
 			};
 
 			Teams = new List<TeamJoinerEnhancedConfigurationTeam>
