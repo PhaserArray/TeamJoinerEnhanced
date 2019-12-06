@@ -48,7 +48,7 @@ namespace PhaserArray.TeamJoinerEnhanced
 			if (playerPermissionsGroups.Count <= 1)
 			{
 				R.Permissions.AddPlayerToGroup(playerTeam.PermissionGroupId, player);
-				UnturnedChat.Say(playerTeam.WelcomeMessage, Color.blue);
+				UnturnedChat.Say(player, playerTeam.WelcomeMessage, Color.blue);
 				Logger.Log($"{player.DisplayName} joined without permissions and was given {playerTeam.PermissionGroupId}.");
 			}
 			else
@@ -61,27 +61,31 @@ namespace PhaserArray.TeamJoinerEnhanced
 					if (!_config.WipePermissionsGroups)
 					{
 						Logger.Log($"{player.DisplayName} joined with another team's permissions. WipePermissionsGroups is set to false, so they were not removed and new permissions were not given.");
+						UnturnedChat.Say(player, _config.PermissionsFromOtherTeamWarning, Color.red);
 						return;
 					}
-
 					var removedPermissionsGroups = new List<string>();
 					foreach (var group in playerPermissionsGroups.Where(group => !_config.IgnoredPermissionsGroupIds.Contains(group.Id)))
 					{
 						R.Permissions.RemovePlayerFromGroup(group.Id, player);
 						removedPermissionsGroups.Add(group.Id);
 					}
-					UnturnedChat.Say(string.Format(_config.PermissionsWipedMessage, string.Join(",", removedPermissionsGroups)), Color.red);
+					UnturnedChat.Say(player, string.Format(_config.PermissionsWipedMessage, string.Join(",", removedPermissionsGroups)), Color.red);
 
 					R.Permissions.AddPlayerToGroup(playerTeam.PermissionGroupId, player);
-					UnturnedChat.Say(playerTeam.WelcomeMessage, Color.blue);
+					UnturnedChat.Say(player, playerTeam.WelcomeMessage, Color.blue);
 
 					Logger.Log(
 						$"{player.DisplayName} joined with another team's permissions. {string.Join(",", removedPermissionsGroups)} were removed and was given {playerTeam.PermissionGroupId}.");
 				}
 				else
 				{
+					if (playerPermissionsGroups.Select(group => group.Id).Contains(playerTeam.PermissionGroupId))
+					{
+						return;
+					}
 					R.Permissions.AddPlayerToGroup(playerTeam.PermissionGroupId, player);
-					UnturnedChat.Say(playerTeam.WelcomeMessage, Color.blue);
+					UnturnedChat.Say(player, playerTeam.WelcomeMessage, Color.blue);
 					Logger.Log($"{player.DisplayName} joined with non-team permissions and was given {playerTeam.PermissionGroupId}.");
 				}
 			}

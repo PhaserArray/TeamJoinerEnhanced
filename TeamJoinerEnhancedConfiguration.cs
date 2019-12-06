@@ -14,6 +14,7 @@ namespace PhaserArray.TeamJoinerEnhanced
 		public string NoTeamPopupUrl;
 
 		public string PermissionsWipedMessage;
+		public string PermissionsFromOtherTeamWarning;
 
 		public List<string> IgnoredPermissionsGroupIds;
 		public List<TeamJoinerEnhancedConfigurationTeam> Teams;
@@ -25,11 +26,13 @@ namespace PhaserArray.TeamJoinerEnhanced
 			NoTeamMessage =
 				"You are not currently in a team. Please ensure you have joined one of the Steam groups and set it as your active group in the main menu under survivors and then group.";
 
-			NoTeamPopupMessage = "You have not joined a team. Click agree to open a steam guide on how to do that!";
+			NoTeamPopupMessage = "You have not joined a team! Click agree to open a steam guide on how to do that.";
 			NoTeamPopupUrl = "https://steamcommunity.com/sharedfiles/filedetails/?id=1928426601";
 
 			PermissionsWipedMessage =
 				"You were previously on a different team. Permissions do not carry over between sides, the following permission group(s) were removed: {0}";
+			PermissionsFromOtherTeamWarning =
+				"You appear to have been on a different team in the past. Please contact staff for new permissions, if you're attempting to swap sides!";
 
 			IgnoredPermissionsGroupIds = new List<string>
 			{
