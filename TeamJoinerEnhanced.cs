@@ -14,7 +14,7 @@ namespace PhaserArray.TeamJoinerEnhanced
 {
 	public class TeamJoinerEnhanced : RocketPlugin<TeamJoinerEnhancedConfiguration>
 	{
-		public const string Version = "v1.1";
+		public const string Version = "v1.2";
 		private TeamJoinerEnhancedConfiguration _config;
 
 		protected override void Load()
