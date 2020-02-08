@@ -6,6 +6,7 @@ using Rocket.Unturned.Player;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Rocket.API.Collections;
 using Steamworks;
 using UnityEngine;
 using Logger = Rocket.Core.Logging.Logger;
@@ -14,7 +15,7 @@ namespace PhaserArray.TeamJoinerEnhanced
 {
 	public class TeamJoinerEnhanced : RocketPlugin<TeamJoinerEnhancedConfiguration>
 	{
-		public const string Version = "v1.2";
+		public const string Version = "v1.3";
 		private TeamJoinerEnhancedConfiguration _config;
 
 		protected override void Load()
@@ -36,7 +37,7 @@ namespace PhaserArray.TeamJoinerEnhanced
 			if (_config.Teams.All(team => (CSteamID)team.SteamGroupId != player.SteamGroupID))
 			{
 				Logger.Log($"{player.DisplayName} joined without being in any relevant Steam groups.");
-				UnturnedChat.Say(player, _config.NoTeamMessage, Color.yellow);
+				UnturnedChat.Say(player, Translate("NoTeamMessage"), Color.yellow);
 				StartCoroutine(SendLinkPopup(player));
 				return;
 			}
@@ -49,7 +50,7 @@ namespace PhaserArray.TeamJoinerEnhanced
 			if (playerPermissionsGroups.Count <= 1)
 			{
 				R.Permissions.AddPlayerToGroup(playerTeam.PermissionGroupId, player);
-				UnturnedChat.Say(player, playerTeam.WelcomeMessage, Color.blue);
+				UnturnedChat.Say(player, Translate("TeamWelcomeMessage"), Color.blue);
 				Logger.Log($"{player.DisplayName} joined without permissions and was given {playerTeam.PermissionGroupId}.");
 			}
 			else
@@ -62,7 +63,7 @@ namespace PhaserArray.TeamJoinerEnhanced
 					if (!_config.WipePermissionsGroups)
 					{
 						Logger.Log($"{player.DisplayName} joined with another team's permissions. WipePermissionsGroups is set to false, so they were not removed and new permissions were not given.");
-						UnturnedChat.Say(player, _config.PermissionsFromOtherTeamWarning, Color.red);
+						UnturnedChat.Say(player, Translate("PermissionsFromOtherTeamWarning"), Color.red);
 						return;
 					}
 					var removedPermissionsGroups = new List<string>();
@@ -71,10 +72,11 @@ namespace PhaserArray.TeamJoinerEnhanced
 						R.Permissions.RemovePlayerFromGroup(group.Id, player);
 						removedPermissionsGroups.Add(group.Id);
 					}
-					UnturnedChat.Say(player, string.Format(_config.PermissionsWipedMessage, string.Join(",", removedPermissionsGroups)), Color.red);
+
+					UnturnedChat.Say(player, Translate("PermissionsWipedMessage", string.Join(",", removedPermissionsGroups)), Color.red);
 
 					R.Permissions.AddPlayerToGroup(playerTeam.PermissionGroupId, player);
-					UnturnedChat.Say(player, playerTeam.WelcomeMessage, Color.blue);
+					UnturnedChat.Say(player, Translate("TeamWelcomeMessage"), Color.blue);
 
 					Logger.Log(
 						$"{player.DisplayName} joined with another team's permissions. {string.Join(",", removedPermissionsGroups)} were removed and was given {playerTeam.PermissionGroupId}.");
@@ -86,7 +88,7 @@ namespace PhaserArray.TeamJoinerEnhanced
 						return;
 					}
 					R.Permissions.AddPlayerToGroup(playerTeam.PermissionGroupId, player);
-					UnturnedChat.Say(player, playerTeam.WelcomeMessage, Color.blue);
+					UnturnedChat.Say(player, Translate("TeamWelcomeMessage"), Color.blue);
 					Logger.Log($"{player.DisplayName} joined with non-team permissions and was given {playerTeam.PermissionGroupId}.");
 				}
 			}
@@ -95,7 +97,16 @@ namespace PhaserArray.TeamJoinerEnhanced
 		private IEnumerator SendLinkPopup(UnturnedPlayer player)
 		{
 			yield return new WaitForSeconds(2f);
-			player.Player.sendBrowserRequest(_config.NoTeamPopupMessage, _config.NoTeamPopupUrl);
+			player.Player.sendBrowserRequest(Translate("NoTeamPopupMessage"), _config.NoTeamPopupUrl);
 		}
+
+		public override TranslationList DefaultTranslations => new TranslationList()
+		{
+			{"NoTeamMessage", "You are not currently in a team. Please ensure you have joined one of the Steam groups and set it as your active group in the main menu under survivors and then group."},
+			{"NoTeamPopupMessage", "You have not joined a team! Click agree to open a steam guide on how to do that."},
+			{"PermissionsWipedMessage", "You were previously on a different team. Permissions do not carry over between sides, the following permission group(s) were removed: {0}"},
+			{"PermissionsFromOtherTeamWarning", "You appear to have been on a different team in the past. Please contact staff for new permissions, if you're attempting to swap sides!"},
+			{"TeamWelcomeMessage", "You have joined the team and have been given the appropriate permissions group."},
+		};
 	}
 }
