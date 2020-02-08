@@ -79,15 +79,15 @@ namespace PhaserArray.TeamJoinerEnhanced
 
 		public struct TeamJoinerEnhancedConfigurationTeam
 		{
-			public string PermissionGroupId;
+			public string GivenPermissionGroupId;
 			public ulong SteamGroupId;
 
 			[XmlArrayItem(ElementName = "FriendlyPermissionGroupId")]
 			public List<string> FriendlyPermissionGroupIds;
 
-			public TeamJoinerEnhancedConfigurationTeam(string permissionGroupId, ulong steamGroupId, List<string> friendlyPermissionGroupIds)
+			public TeamJoinerEnhancedConfigurationTeam(string givenPermissionGroupId, ulong steamGroupId, List<string> friendlyPermissionGroupIds)
 			{
-				PermissionGroupId = permissionGroupId;
+				GivenPermissionGroupId = givenPermissionGroupId;
 				SteamGroupId = steamGroupId;
 				FriendlyPermissionGroupIds = friendlyPermissionGroupIds;
 			}
