@@ -55,19 +55,20 @@ namespace PhaserArray.TeamJoinerEnhanced
 			}
 			else
 			{
+				
 				// The player has a permissions group from a different team, so remove all non-ignored permissions and give them the appropriate permissions group.
-				if (playerPermissionsGroups.Any(group =>
-					_config.Teams.Where(team => team != playerTeam).Select(team => team.PermissionGroupId).ToList()
-						.Contains(group.Id)))
+				if (playerPermissionsGroups.Exists(group => _config.Teams.Any(team =>
+					team != playerTeam &&
+					(team.PermissionGroupId == group.Id || team.FriendlyPermissionGroupIds.Contains(group.Id)))))
 				{
-					if (!_config.WipePermissionsGroups)
+					if (!_config.WipePermissionGroups)
 					{
 						Logger.Log(Translate("ConsoleWrongTeamPermsWarning", player.DisplayName));
 						UnturnedChat.Say(player, Translate("PermissionsFromOtherTeamWarning"), Color.red);
 						return;
 					}
 					var removedPermissionsGroups = new List<string>();
-					foreach (var group in playerPermissionsGroups.Where(group => !_config.IgnoredPermissionsGroupIds.Contains(group.Id)))
+					foreach (var group in playerPermissionsGroups.Where(group => !_config.IgnoredPermissionGroupIds.Contains(group.Id)))
 					{
 						R.Permissions.RemovePlayerFromGroup(group.Id, player);
 						removedPermissionsGroups.Add(group.Id);
@@ -108,7 +109,7 @@ namespace PhaserArray.TeamJoinerEnhanced
 			{"TeamWelcomeMessage", "You have joined the team and have been given the appropriate permissions group."},
 			{"ConsoleNoTeam", "{0} joined without being in any relevant Steam groups."},
 			{"ConsoleNewToTeam", "{0} joined without permissions and was given {1}."},
-			{"ConsoleWrongTeamPermsWarning", "{0} joined with another team's permissions. WipePermissionsGroups is set to false, so they were not removed and new permissions were not given."},
+			{"ConsoleWrongTeamPermsWarning", "{0} joined with another team's permissions. WipePermissionGroups is set to false, so they were not removed and new permissions were not given."},
 			{"ConsoleWrongTeamPermsWiped", "{0} joined with another team's permissions. They were given {1}, their removed permissions were: {2}."},
 			{"ConsoleNonTeamPerms", "{0} joined with non-team permissions and was given {1}."}
 		};

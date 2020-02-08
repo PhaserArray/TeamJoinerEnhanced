@@ -6,22 +6,22 @@ namespace PhaserArray.TeamJoinerEnhanced
 {
 	public class TeamJoinerEnhancedConfiguration : IRocketPluginConfiguration
 	{
-		public bool WipePermissionsGroups;
+		public bool WipePermissionGroups;
 
 		public string NoTeamPopupUrl;
 
-		[XmlArrayItem(ElementName = "IgnoredPermissionsGroupId")]
-		public List<string> IgnoredPermissionsGroupIds;
+		[XmlArrayItem(ElementName = "IgnoredPermissionGroupId")]
+		public List<string> IgnoredPermissionGroupIds;
 		[XmlArrayItem(ElementName = "Team")]
 		public List<TeamJoinerEnhancedConfigurationTeam> Teams;
 
 		public void LoadDefaults()
 		{
-			WipePermissionsGroups = true;
+			WipePermissionGroups = true;
 
 			NoTeamPopupUrl = "https://steamcommunity.com/sharedfiles/filedetails/?id=1928426601";
 
-			IgnoredPermissionsGroupIds = new List<string>
+			IgnoredPermissionGroupIds = new List<string>
 			{
 				"mod",
 				"moderator",
@@ -33,13 +33,47 @@ namespace PhaserArray.TeamJoinerEnhanced
 			Teams = new List<TeamJoinerEnhancedConfigurationTeam>
 			{
 				new TeamJoinerEnhancedConfigurationTeam(
-					"allies",
-					103582791465718191u
-					),
+					"apvt",
+					103582791465718191u,
+					new List<string>
+					{
+						"apvt",
+						"apfc",
+						"acpl",
+						"asgt",
+						"assgt",
+						"a1sgt",
+						"amsgt",
+						"a2lt",
+						"a1lt",
+						"acpt",
+						"amaj",
+						"altc",
+						"acol",
+						"abg"
+					}
+				),
 				new TeamJoinerEnhancedConfigurationTeam(
-					"axis",
-					103582791465717990u
-					)
+					"gpvt",
+					103582791465717990u,
+					new List<string>
+					{
+						"gpvt",
+						"gpfc",
+						"gcpl",
+						"gsgt",
+						"gssgt",
+						"g1sgt",
+						"gmsgt",
+						"g2lt",
+						"g1lt",
+						"gcpt",
+						"gmaj",
+						"gltc",
+						"gcol",
+						"gbg"
+					}
+				)
 			};
 		}
 
@@ -48,10 +82,14 @@ namespace PhaserArray.TeamJoinerEnhanced
 			public string PermissionGroupId;
 			public ulong SteamGroupId;
 
-			public TeamJoinerEnhancedConfigurationTeam(string permissionGroupId, ulong steamGroupId)
+			[XmlArrayItem(ElementName = "FriendlyPermissionGroupId")]
+			public List<string> FriendlyPermissionGroupIds;
+
+			public TeamJoinerEnhancedConfigurationTeam(string permissionGroupId, ulong steamGroupId, List<string> friendlyPermissionGroupIds)
 			{
 				PermissionGroupId = permissionGroupId;
 				SteamGroupId = steamGroupId;
+				FriendlyPermissionGroupIds = friendlyPermissionGroupIds;
 			}
 
 			public static bool operator ==(TeamJoinerEnhancedConfigurationTeam a,
