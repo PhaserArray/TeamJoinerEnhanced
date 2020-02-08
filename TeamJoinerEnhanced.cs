@@ -36,8 +36,8 @@ namespace PhaserArray.TeamJoinerEnhanced
 			// The player is not in any of the Steam groups.
 			if (_config.Teams.All(team => (CSteamID)team.SteamGroupId != player.SteamGroupID))
 			{
-				Logger.Log($"{player.DisplayName} joined without being in any relevant Steam groups.");
-				UnturnedChat.Say(player, Translate("NoTeamMessage"), Color.yellow);
+				Logger.Log(Translate("ConsoleNoTeam"));
+				UnturnedChat.Say(Translate("NoTeamMessage", player), Color.yellow);
 				StartCoroutine(SendLinkPopup(player));
 				return;
 			}
@@ -51,7 +51,7 @@ namespace PhaserArray.TeamJoinerEnhanced
 			{
 				R.Permissions.AddPlayerToGroup(playerTeam.PermissionGroupId, player);
 				UnturnedChat.Say(player, Translate("TeamWelcomeMessage"), Color.blue);
-				Logger.Log($"{player.DisplayName} joined without permissions and was given {playerTeam.PermissionGroupId}.");
+				Logger.Log(Translate("ConsoleNewToTeam", player.DisplayName, playerTeam.PermissionGroupId));
 			}
 			else
 			{
@@ -62,7 +62,7 @@ namespace PhaserArray.TeamJoinerEnhanced
 				{
 					if (!_config.WipePermissionsGroups)
 					{
-						Logger.Log($"{player.DisplayName} joined with another team's permissions. WipePermissionsGroups is set to false, so they were not removed and new permissions were not given.");
+						Logger.Log(Translate("ConsoleWrongTeamPermsWarning", player.DisplayName));
 						UnturnedChat.Say(player, Translate("PermissionsFromOtherTeamWarning"), Color.red);
 						return;
 					}
@@ -78,8 +78,7 @@ namespace PhaserArray.TeamJoinerEnhanced
 					R.Permissions.AddPlayerToGroup(playerTeam.PermissionGroupId, player);
 					UnturnedChat.Say(player, Translate("TeamWelcomeMessage"), Color.blue);
 
-					Logger.Log(
-						$"{player.DisplayName} joined with another team's permissions. {string.Join(",", removedPermissionsGroups)} were removed and was given {playerTeam.PermissionGroupId}.");
+					Logger.Log(Translate("ConsoleWrongTeamPermsWiped", player.DisplayName, playerTeam.PermissionGroupId, string.Join(",", removedPermissionsGroups)));
 				}
 				else
 				{
@@ -89,11 +88,11 @@ namespace PhaserArray.TeamJoinerEnhanced
 					}
 					R.Permissions.AddPlayerToGroup(playerTeam.PermissionGroupId, player);
 					UnturnedChat.Say(player, Translate("TeamWelcomeMessage"), Color.blue);
-					Logger.Log($"{player.DisplayName} joined with non-team permissions and was given {playerTeam.PermissionGroupId}.");
+					Logger.Log(Translate("ConsoleNonTeamPerms", player.DisplayName, playerTeam.PermissionGroupId));
 				}
 			}
 		}
-
+		
 		private IEnumerator SendLinkPopup(UnturnedPlayer player)
 		{
 			yield return new WaitForSeconds(2f);
@@ -107,6 +106,11 @@ namespace PhaserArray.TeamJoinerEnhanced
 			{"PermissionsWipedMessage", "You were previously on a different team. Permissions do not carry over between sides, the following permission group(s) were removed: {0}"},
 			{"PermissionsFromOtherTeamWarning", "You appear to have been on a different team in the past. Please contact staff for new permissions, if you're attempting to swap sides!"},
 			{"TeamWelcomeMessage", "You have joined the team and have been given the appropriate permissions group."},
+			{"ConsoleNoTeam", "{0} joined without being in any relevant Steam groups."},
+			{"ConsoleNewToTeam", "{0} joined without permissions and was given {1}."},
+			{"ConsoleWrongTeamPermsWarning", "{0} joined with another team's permissions. WipePermissionsGroups is set to false, so they were not removed and new permissions were not given."},
+			{"ConsoleWrongTeamPermsWiped", "{0} joined with another team's permissions. They were given {1}, their removed permissions were: {2}."},
+			{"ConsoleNonTeamPerms", "{0} joined with non-team permissions and was given {1}."}
 		};
 	}
 }
