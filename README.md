@@ -1,4 +1,4 @@
 # TeamJoinerEnhanced
 
 
-![Flowchart of how the plugin works.](https://i.imgur.com/nUjDJ2I.png)
+![Flowchart of how the plugin works.](https://i.imgur.com/eudg3tt.png)
